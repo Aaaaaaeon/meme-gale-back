@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "directus": "^11.11.0",
+    "meilisearch": "^0.52.0",
     "sqlite3": "^5.1.7"
   }
 }
