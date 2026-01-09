@@ -1,0 +1,476 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-01-09T09:50:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "resources": [
+    {
+      "_id": "wrk_memegale",
+      "parentId": null,
+      "_type": "workspace",
+      "name": "MemeGale Backend",
+      "description": "API Directus pour la gestion de memes avec Meilisearch",
+      "scope": "collection"
+    },
+    {
+      "_id": "env_base",
+      "parentId": "wrk_memegale",
+      "_type": "environment",
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:8055",
+        "access_token": "",
+        "refresh_token": ""
+      }
+    },
+    {
+      "_id": "folder_auth",
+      "parentId": "wrk_memegale",
+      "_type": "request_group",
+      "name": "🔐 Authentication"
+    },
+    {
+      "_id": "req_login",
+      "parentId": "folder_auth",
+      "_type": "request",
+      "name": "Login",
+      "method": "POST",
+      "url": "{{ _.base_url }}/auth/login",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"admin\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ]
+    },
+    {
+      "_id": "req_refresh",
+      "parentId": "folder_auth",
+      "_type": "request",
+      "name": "Refresh Token",
+      "method": "POST",
+      "url": "{{ _.base_url }}/auth/refresh",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"refresh_token\": \"{{ _.refresh_token }}\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ]
+    },
+    {
+      "_id": "req_logout",
+      "parentId": "folder_auth",
+      "_type": "request",
+      "name": "Logout",
+      "method": "POST",
+      "url": "{{ _.base_url }}/auth/logout",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"refresh_token\": \"{{ _.refresh_token }}\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ]
+    },
+    {
+      "_id": "folder_tags",
+      "parentId": "wrk_memegale",
+      "_type": "request_group",
+      "name": "🏷️ Tags"
+    },
+    {
+      "_id": "req_tags_list",
+      "parentId": "folder_tags",
+      "_type": "request",
+      "name": "Get All Tags",
+      "method": "GET",
+      "url": "{{ _.base_url }}/items/tags",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.access_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_tags_create",
+      "parentId": "folder_tags",
+      "_type": "request",
+      "name": "Create Tag",
+      "method": "POST",
+      "url": "{{ _.base_url }}/items/tags",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"JavaScript\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.access_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_tags_update",
+      "parentId": "folder_tags",
+      "_type": "request",
+      "name": "Update Tag",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/items/tags/TAG_ID",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"TypeScript\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.access_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_tags_delete",
+      "parentId": "folder_tags",
+      "_type": "request",
+      "name": "Delete Tag",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/items/tags/TAG_ID",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.access_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "folder_memes",
+      "parentId": "wrk_memegale",
+      "_type": "request_group",
+      "name": "🎭 Memes"
+    },
+    {
+      "_id": "req_memes_list",
+      "parentId": "folder_memes",
+      "_type": "request",
+      "name": "Get All Memes",
+      "method": "GET",
+      "url": "{{ _.base_url }}/items/memes?fields=*,user_created.first_name,user_created.last_name,tags.tags_id.name",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.access_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_memes_get_one",
+      "parentId": "folder_memes",
+      "_type": "request",
+      "name": "Get Meme by ID",
+      "method": "GET",
+      "url": "{{ _.base_url }}/items/memes/MEME_ID?fields=*,user_created.*,tags.tags_id.*",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.access_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_memes_create",
+      "parentId": "folder_memes",
+      "_type": "request",
+      "name": "Create Meme",
+      "method": "POST",
+      "url": "{{ _.base_url }}/items/memes",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"title\": \"Mon premier meme\",\n  \"image\": \"IMAGE_UUID\",\n  \"status\": \"published\",\n  \"tags\": [\n    {\n      \"tags_id\": \"TAG_UUID\"\n    }\n  ]\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.access_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_memes_update",
+      "parentId": "folder_memes",
+      "_type": "request",
+      "name": "Update Meme",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/items/memes/MEME_ID",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"title\": \"Titre modifié\",\n  \"status\": \"draft\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.access_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_memes_delete",
+      "parentId": "folder_memes",
+      "_type": "request",
+      "name": "Delete Meme",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/items/memes/MEME_ID",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.access_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "folder_files",
+      "parentId": "wrk_memegale",
+      "_type": "request_group",
+      "name": "📁 Files"
+    },
+    {
+      "_id": "req_upload_file",
+      "parentId": "folder_files",
+      "_type": "request",
+      "name": "Upload Image",
+      "method": "POST",
+      "url": "{{ _.base_url }}/files",
+      "body": {
+        "mimeType": "multipart/form-data",
+        "params": [
+          {
+            "name": "file",
+            "type": "file",
+            "fileName": "",
+            "value": ""
+          }
+        ]
+      },
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.access_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_get_file",
+      "parentId": "folder_files",
+      "_type": "request",
+      "name": "Get File Info",
+      "method": "GET",
+      "url": "{{ _.base_url }}/files/FILE_UUID",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.access_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "folder_likes",
+      "parentId": "wrk_memegale",
+      "_type": "request_group",
+      "name": "💙 Likes Manager"
+    },
+    {
+      "_id": "req_like_toggle",
+      "parentId": "folder_likes",
+      "_type": "request",
+      "name": "Toggle Like",
+      "method": "POST",
+      "url": "{{ _.base_url }}/like-manager/toggle",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"meme_id\": \"MEME_UUID\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.access_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_like_status",
+      "parentId": "folder_likes",
+      "_type": "request",
+      "name": "Get Like Status",
+      "method": "GET",
+      "url": "{{ _.base_url }}/like-manager/status/MEME_UUID",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.access_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "folder_search",
+      "parentId": "wrk_memegale",
+      "_type": "request_group",
+      "name": "🔍 Meilisearch"
+    },
+    {
+      "_id": "req_search_setup",
+      "parentId": "folder_search",
+      "_type": "request",
+      "name": "Setup Index",
+      "method": "POST",
+      "url": "{{ _.base_url }}/search-setup/meilisearch",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.access_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_search_status",
+      "parentId": "folder_search",
+      "_type": "request",
+      "name": "Get Status",
+      "method": "GET",
+      "url": "{{ _.base_url }}/search-setup/meilisearch/status",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.access_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_search_memes",
+      "parentId": "folder_search",
+      "_type": "request",
+      "name": "Search Memes",
+      "method": "GET",
+      "url": "{{ _.base_url }}/search/memes?q=javascript&limit=20&offset=0",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.access_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_search_filter_tags",
+      "parentId": "folder_search",
+      "_type": "request",
+      "name": "Search with Tag Filter",
+      "method": "GET",
+      "url": "{{ _.base_url }}/search/memes?q=&tags=JavaScript&limit=20",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.access_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_search_sort",
+      "parentId": "folder_search",
+      "_type": "request",
+      "name": "Search with Sort",
+      "method": "GET",
+      "url": "{{ _.base_url }}/search/memes?q=&sort=likes_desc,date_created_desc",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.access_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_search_suggest",
+      "parentId": "folder_search",
+      "_type": "request",
+      "name": "Autocomplete Suggestions",
+      "method": "GET",
+      "url": "{{ _.base_url }}/search/memes/suggest?q=java&limit=5",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.access_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "folder_notifications",
+      "parentId": "wrk_memegale",
+      "_type": "request_group",
+      "name": "🔔 Notifications"
+    },
+    {
+      "_id": "req_notifications_list",
+      "parentId": "folder_notifications",
+      "_type": "request",
+      "name": "Get My Notifications",
+      "method": "GET",
+      "url": "{{ _.base_url }}/items/notifications?filter[user_id][_eq]=$CURRENT_USER",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.access_token }}"
+        }
+      ]
+    },
+    {
+      "_id": "req_notifications_mark_read",
+      "parentId": "folder_notifications",
+      "_type": "request",
+      "name": "Mark as Read",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/items/notifications/NOTIFICATION_ID",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"status\": \"read\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.access_token }}"
+        }
+      ]
+    }
+  ]
+}

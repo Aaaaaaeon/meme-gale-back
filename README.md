@@ -119,8 +119,15 @@ npx directus start
    - `/search/memes` et `/search/memes/suggest`
 
 3. **search-setup** (Endpoint)
+
    - Configuration initiale de l'index Meilisearch
-   - `/search-setup/meilisearch`
+   - `/search-setup/meilisearch` (POST) - Initialiser l'index
+   - `/search-setup/meilisearch/status` (GET) - Vérifier l'état
+
+4. **like-manager** (Endpoint)
+   - Gestion intelligente des likes
+   - `/like-manager/toggle` (POST) - Toggle un like
+   - `/like-manager/status/:meme_id` (GET) - Vérifier le statut
 
 ## 🔧 Configuration initiale
 
@@ -135,8 +142,15 @@ npx directus schema apply ./schema-snapshot.json
 Après avoir démarré Directus et Meilisearch, appelez :
 
 ```bash
-curl -X POST http://localhost:8055/search-setup/meilisearch
+curl -X POST http://localhost:8055/search-setup/meilisearch \
+  -H "Authorization: Bearer YOUR_TOKEN"
 ```
+
+### 3. Importer la collection Insomnia
+
+- Ouvrir Insomnia ou Postman
+- Importer le fichier `MemeGale.insomnia.json`
+- Configurer les variables d'environnement si nécessaire
 
 ## 📚 API Endpoints
 
@@ -146,25 +160,52 @@ curl -X POST http://localhost:8055/search-setup/meilisearch
 - `POST /auth/refresh` - Rafraîchir le token
 - `POST /auth/logout` - Déconnexion
 
+### Tags
+
+- `GET /items/tags` - Liste des tags
+- `POST /items/tags` - Créer un tag
+- `PATCH /items/tags/:id` - Modifier un tag
+- `DELETE /items/tags/:id` - Supprimer un tag
+
 ### Memes
 
 - `GET /items/memes` - Liste des memes
+- `GET /items/memes/:id` - Détails d'un meme
 - `POST /items/memes` - Créer un meme
 - `PATCH /items/memes/:id` - Modifier un meme
 - `DELETE /items/memes/:id` - Supprimer un meme
+
+### Fichiers
+
+- `POST /files` - Upload une image
+- `GET /files/:id` - Informations sur un fichier
+- `GET /assets/:id` - Accéder à l'image
 
 ### Recherche Meilisearch
 
 - `GET /search/memes?q=...&tags=...&sort=...` - Recherche avancée
 - `GET /search/memes/suggest?q=...` - Autocomplétion
 
-### Likes
+### Like Manager (Extension custom)
 
-- `POST /like-manager/toggle` - Toggle un like
+- `POST /like-manager/toggle` - Toggle un like (body: `{"meme_id": "uuid"}`)
+- `GET /like-manager/status/:meme_id` - Vérifier le statut du like
+
+### Notifications
+
+- `GET /items/notifications` - Liste des notifications
+- `PATCH /items/notifications/:id` - Marquer comme lu
 
 ## 🧪 Tests
 
-Une collection Insomnia/Postman est disponible pour tester tous les endpoints.
+Une collection Insomnia complète (`MemeGale.insomnia.json`) est disponible avec tous les endpoints configurés.
+
+**Pour l'utiliser :**
+
+1. Importer le fichier dans Insomnia
+2. Se connecter avec l'endpoint "Login"
+3. Le token sera automatiquement sauvegardé dans les variables d'environnement
+4. Tester tous les endpoints (Auth, CRUD, Search, Likes)
 
 ## 📝 Notes
 
