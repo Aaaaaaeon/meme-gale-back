@@ -79,11 +79,3 @@ Collections principales :
 - `comments` : Commentaires sur les mèmes.
 - `directus_users` : Utilisateurs de l'app.
 
-## 📝 Évaluation (R506)
-
-Le backend respecte les critères :
-
-- ✅ **Conventions** : Utilisation standard de Directus.
-- ✅ **Permissions** : Rôles "Authenticated User" configurés avec accès granulaires.
-- ✅ **OAuth** : Configuration Google (à finaliser avec vars).
-- ✅ **WebSockets** : Activés pour le temps réel.
